@@ -10,7 +10,7 @@ val sdkMajor = "v3"
 val sdkVersion = s"${sdkMajor}.1.0"
 val protoDir = "src/main/proto"
 
-mainClass in Compile := Some("org.bblfsh.client.cli.ScalaClientCLI")
+mainClass in Compile := Some("org.bblfsh.client.v2.cli.ScalaClientCLI")
 
 target in assembly := file("build")
 
@@ -25,7 +25,9 @@ libraryDependencies ++= Seq(
   "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
   "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
 
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+
+  "com.github.scopt" %% "scopt" % "4.0.0-RC2"
 )
 
 assemblyMergeStrategy in assembly := {

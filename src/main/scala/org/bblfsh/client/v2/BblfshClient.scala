@@ -9,7 +9,7 @@ import org.bblfsh.client.v2.libuast.Libuast
 
 
 class BblfshClient(host: String, port: Int, maxMsgSize: Int) {
-  private val DEFAULT_TIMEOUT_SEC = 5
+  import BblfshClient.DEFAULT_TIMEOUT_SEC
 
   private val channel = ManagedChannelBuilder
     .forAddress(host, port)
@@ -108,6 +108,7 @@ class BblfshClient(host: String, port: Int, maxMsgSize: Int) {
 
 object BblfshClient {
   val DEFAULT_MAX_MSG_SIZE = 100 * 1024 * 1024 // bytes
+  val DEFAULT_TIMEOUT_SEC = 60
 
   private val libuast = new Libuast
   private val orders = libuast.getTreeOrders
