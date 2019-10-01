@@ -41,12 +41,14 @@ object CLIOptions {
     }
   }
 
+  /** Allows to read UastFormat from the command line */
   implicit val modeRead: scopt.Read[UastFormat] =
     scopt.Read.reads {
       case "yaml" => UastYaml
       case "binary" => UastBinary
     }
 
+  /** Allows to read a UAST Mode from the command line */
   implicit val outRead: scopt.Read[Mode] =
     scopt.Read.reads {
       case "semantic" => Mode.SEMANTIC
@@ -54,9 +56,10 @@ object CLIOptions {
       case "native" => Mode.NATIVE
     }
 
+  /** Contains the parsing information for the CLI arguments */
   val parser = {
     OParser.sequence(
-      programName(".jar file"),
+      programName("<bblfsh-client-assembly-*.jar | sbt run>"),
       head("bblfsh-cli", "v2"),
 
       opt[String]('a', "host")
@@ -103,7 +106,7 @@ object CLIOptions {
           if (f.isFile)
             success
           else
-            failure("wrong file to parse")
+            failure(s"file $f does not exist")
         ),
       help("help").text("prints this usage text")
     )
@@ -126,10 +129,13 @@ object ScalaClientCLI extends App {
       val lang = opts.language
       val fmt = opts.out
       val resp = client.parseWithOptions(name, content, lang, BblfshClient.DEFAULT_TIMEOUT_SEC, mode)
+      val ctx = resp.uast.decode(fmt)
       if (!query.isEmpty) {
-        println(BblfshClient.filter(resp.get(fmt), query))
+        val it = ctx.filter(query)
+        val root = it.next.load()
+        println(root)
       } else {
-        println(resp.get(fmt))
+        println(ctx.root.load())
       }
     case _ =>
       System.exit(-1)

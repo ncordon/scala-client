@@ -804,6 +804,15 @@ Java_org_bblfsh_client_v2_libuast_Libuast_00024UastIterExt_nativeNext(
 //              v2.Context()
 // ==========================================
 
+JNIEXPORT jobject JNICALL Java_org_bblfsh_client_v2_Context_root(
+  JNIEnv *env, jobject self) {
+  Context *ctx = getHandle<Context>(env, self, nativeContext);
+  jobject root = ctx->RootNode();
+
+  return root;
+}
+
+
 JNIEXPORT jobject JNICALL Java_org_bblfsh_client_v2_Context_filter(
     JNIEnv *env, jobject self, jstring jquery, jobject jnode) {
   Context *ctx = getHandle<Context>(env, self, nativeContext);
